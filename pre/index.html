@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>人工智能占卜师</title>
+  </head>
+  <body>
+    <h1>人工智能占卜师</h1>
+    <form id="fortune-form" onsubmit="getFortune(); return false;">
+      <label for="category">请选择您需要的占卜种类：</label>
+      <select name="category" id="category">
+        <option value="爱情">爱情</option>
+        <option value="职业">职业</option>
+        <option value="健康">健康</option>
+        <option value="财务">财务</option>
+        <option value="家庭">家庭</option>
+        <option value="友谊">友谊</option>
+        <option value="旅游">旅游</option>
+        <option value="教育">教育</option>
+        <option value="精神">精神</option>
+        <option value="个人发展">个人发展</option>
+      </select>
+      <br />
+      <label for="question">请输入您要占卜的问题：</label>
+      <input type="text" id="question" name="question" placeholder="例如：我这个月能升职吗？" />
+      <br />
+      <label for="description">请输入您的自述：</label>
+      <textarea id="description" name="description" rows="5" cols="50" placeholder="例如：我现在在公司里的工作压力很大，但我有很多经验和技能，希望能够得到更好的机会和发展。"></textarea>
+      <br />
+      <button type="submit">占卜一下</button>
+    </form>
+
+    <div id="result" style="display: none;">
+      <h2 id="result-title"></h2>
+      <p id="result-text"></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      function getFortune() {
+        // 获取表单中的数据
+        const category = document.getElementById("category").value;
+        const question = document.getElementById("question").value;
+        const description = document.getElementById("description").value;
+
+        // 发送 POST 请求到服务器进行占卜
+        axios
+          .post("/predict", {
+            category,
+            question,
+            description,
+          })
+          .then((response) => {
+            // 更新占卜结果
+            const resultTitle = document.getElementById("result-title");
+            const resultText = document.getElementById("result-text");
+            resultTitle.innerText = `${category}相关占卜结果：`;
+            resultText.innerText = response.data.prediction;
+
+            // 显示占卜结果
+            const result = document.getElementById("result");
+            result.style.display = "block";
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    </script>
+  </body>
+</html>
